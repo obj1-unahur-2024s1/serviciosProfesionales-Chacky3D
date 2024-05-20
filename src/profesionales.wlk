@@ -1,29 +1,44 @@
-// esta clase está completa, no necesita nada más
-class ProfesionalAsociado {
-	var universidad
-	
-	method universidad() { return universidad }
-	method universidad(univ) { universidad = univ }
-	
-	method provinciasDondePuedeTrabajar() { return #{"Entre Ríos", "Corrientes", "Santa Fe"} }
-	
-	method honorariosPorHora() { return 3000 }
-}
+import universidades.*
 
-
-// a esta clase le faltan métodos
 class ProfesionalVinculado {
-	var universidad
+	const universidad
 	
 	method universidad() { return universidad }
-	method universidad(univ) { universidad = univ }
+	method provinciasDondePuedeTrabajar() { return #{ universidad.provincia() } }
+	method honorariosPorHora() { return universidad.honorariosRecomendados() }
+	method cobrar(importe) { universidad.recibir(importe / 2) }
+	method cobrarServicio() { self.cobrar(self.honorariosPorHora()) }
+	
 }
 
-
-// a esta clase le faltan atributos y métodos
-class ProfesionalLibre {
-	var universidad
+class ProfesionalAsociado {
+	const universidad
 	
 	method universidad() { return universidad }
-	method universidad(univ) { universidad = univ }
+	method provinciasDondePuedeTrabajar() { return #{"Entre Ríos", "Corrientes", "Santa Fe"} }
+	method honorariosPorHora() { return 3000 }
+	method cobrar(importe) { asociacionDeProfesionalesDelLitoral.recibir(importe) }
+	method cobrarServicio() { self.cobrar(self.honorariosPorHora()) }
+	
+}
+
+class ProfesionalLibre {
+	const universidad
+	const provinciasDondePuedeTrabajar = #{}
+	var honorariosPorHora
+	var dineroRecaudado = 0
+	
+	method universidad() { return universidad }
+	method provinciasDondePuedeTrabajar() { return provinciasDondePuedeTrabajar }
+	method provinciasDondePuedeTrabajar(provincias) { provinciasDondePuedeTrabajar.addAll(provincias) }
+	method honorariosPorHora(valor) { honorariosPorHora = valor }
+	method honorariosPorHora() { return honorariosPorHora }
+	method dineroRecaudado() { return dineroRecaudado }
+	method cobrar(importe) { dineroRecaudado = dineroRecaudado + importe }
+	method cobrarServicio() { self.cobrar(self.honorariosPorHora()) }
+	method pasarDineroA(persona, importe) { 
+		persona.cobrar(importe)
+		dineroRecaudado = dineroRecaudado - importe
+	}
+	
 }

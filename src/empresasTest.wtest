@@ -1,0 +1,134 @@
+import profesionales.*
+import universidades.*
+import empresas.*
+import solicitantes.*
+
+test "Etapa 1"{
+
+	const sanMartin = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 3500)
+	const rosario = new Universidad(provincia = "Santa Fe", honorariosRecomendados = 2800)
+	const corrientes = new Universidad(provincia = "Corrientes", honorariosRecomendados = 4200)
+	const hurlingham = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 8800)
+	const juana = new ProfesionalVinculado(universidad = rosario)
+	const melina = new ProfesionalAsociado(universidad = corrientes)
+	const rocio = new ProfesionalLibre(universidad = hurlingham, honorariosPorHora = 5000, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Cordoba", "Buenos Aires"}
+	)
+	const luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Entre Rios"}
+	)
+	const emp1 = new Empresa(honorarioDeReferencia = 3500)
+	emp1.contratar(juana)
+	emp1.contratar(melina)
+	emp1.contratar(rocio)
+	emp1.contratar(luciana)
+	assert.equals(2, emp1.cuantosEstudiaronEn(rosario))
+	assert.equals(1, emp1.cuantosEstudiaronEn(hurlingham))
+	assert.equals(1, emp1.cuantosEstudiaronEn(corrientes))
+	assert.equals(0, emp1.cuantosEstudiaronEn(sanMartin))
+	assert.equals(#{rocio}, emp1.profesionalesCaros())
+	assert.equals(#{rosario, corrientes, hurlingham}, emp1.universidadesFormadoras())
+	assert.equals(juana, emp1.profesionalMasBarato())
+	assert.that(emp1.esDeGeneteAcotada())
+	luciana.provinciasDondePuedeTrabajar(#{"Corrientes", "Misiones"})
+	assert.notThat(emp1.esDeGeneteAcotada())
+
+}
+
+test "Etapa 2"{
+	const sanMartin = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 3500)
+	const rosario = new Universidad(provincia = "Santa Fe", honorariosRecomendados = 2800)
+	const corrientes = new Universidad(provincia = "Corrientes", honorariosRecomendados = 4200)
+	const hurlingham = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 8800)
+	const juana = new ProfesionalVinculado(universidad = rosario)
+	const melina = new ProfesionalAsociado(universidad = corrientes)
+	const rocio = new ProfesionalLibre(universidad = hurlingham, honorariosPorHora = 5000, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Cordoba", "Buenos Aires"}
+	)
+	const luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Entre Rios"}
+	)
+	const emp1 = new Empresa(honorarioDeReferencia = 3500)
+	emp1.contratar(juana)
+	emp1.contratar(melina)
+	emp1.contratar(rocio)
+	emp1.contratar(luciana)
+	const federico = new Persona(provincias = #{"Santa Fe"})
+	const claudio = new Persona(provincias = #{"Chaco"})
+	const universidadInteramericana = new Institucion(provincias = #{"Entre Rios", "Cordoba"})
+	const universidadNacional = new Institucion(provincias = #{"Chaco", "Formosa", "Chubut"})
+	const sarmiento = new Club(provincias = #{"Chaco", "Santa Fe"})
+	const alberdi = new Club(provincias = #{"Chubut", "Tierra del Fuego"})
+	assert.that(!emp1.puedeAtenderA(federico).isEmpty())
+	assert.that(emp1.puedeAtenderA(claudio).isEmpty())
+	assert.that(!emp1.puedeAtenderA(universidadInteramericana).isEmpty())
+	assert.that(emp1.puedeAtenderA(universidadNacional).isEmpty())
+	assert.that(!emp1.puedeAtenderA(sarmiento).isEmpty())
+	assert.that(emp1.puedeAtenderA(alberdi).isEmpty())
+	
+	
+}
+
+test "Etapa 3"{
+	const sanMartin = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 3500)
+	const rosario = new Universidad(provincia = "Santa Fe", honorariosRecomendados = 2800)
+	const corrientes = new Universidad(provincia = "Corrientes", honorariosRecomendados = 4200)
+	const hurlingham = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 8800)
+	const juana = new ProfesionalVinculado(universidad = rosario)
+	const melina = new ProfesionalAsociado(universidad = corrientes)
+	const rocio = new ProfesionalLibre(universidad = hurlingham, honorariosPorHora = 5000, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Cordoba", "Buenos Aires"}
+	)
+	const luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Entre Rios"}
+	)
+	juana.cobrar(10000)
+	assert.equals(5000, rosario.dineroRecibidoPorDonaciones())
+	melina.cobrar(10000)
+	assert.equals(10000, asociacionDeProfesionalesDelLitoral.dineroRecaudado())
+	rocio.cobrar(10000)
+	assert.equals(10000, rocio.dineroRecaudado())
+	rocio.pasarDineroA(luciana, 5000)
+	assert.equals(5000, rocio.dineroRecaudado())
+	assert.equals(5000, luciana.dineroRecaudado())
+}
+
+test "Etapa 4"{
+	const sanMartin = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 3500)
+	const rosario = new Universidad(provincia = "Santa Fe", honorariosRecomendados = 2800)
+	const corrientes = new Universidad(provincia = "Corrientes", honorariosRecomendados = 4200)
+	const hurlingham = new Universidad(provincia = "Buenos Aires", honorariosRecomendados = 8800)
+	const juana = new ProfesionalVinculado(universidad = rosario)
+	const melina = new ProfesionalAsociado(universidad = corrientes)
+	const rocio = new ProfesionalLibre(universidad = hurlingham, honorariosPorHora = 5000, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Cordoba", "Buenos Aires"}
+	)
+	const luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, 
+		provinciasDondePuedeTrabajar = #{"Santa Fe", "Entre Rios"}
+	)
+	const emp1 = new Empresa(honorarioDeReferencia = 3500)
+	emp1.contratar(juana)
+	emp1.contratar(melina)
+	emp1.contratar(rocio)
+	emp1.contratar(luciana)
+	const federico = new Persona(provincias = #{"Santa Fe"})
+	const claudio = new Persona(provincias = #{"Chaco"})
+	const universidadInteramericana = new Institucion(provincias = #{"Entre Rios", "Cordoba"})
+	const universidadNacional = new Institucion(provincias = #{"Chaco", "Formosa", "Chubut"})
+	const sarmiento = new Club(provincias = #{"Chaco", "Santa Fe"})
+	const alberdi = new Club(provincias = #{"Chubut", "Tierra del Fuego"})
+	assert.equals(0, emp1.cantidadDeClientes())
+	emp1.darServicio(federico)
+	assert.equals(1, emp1.cantidadDeClientes())
+	emp1.darServicio(claudio)
+	assert.equals(1, emp1.cantidadDeClientes())
+	emp1.darServicio(universidadInteramericana)
+	assert.equals(2, emp1.cantidadDeClientes())
+	emp1.darServicio(universidadNacional)
+	assert.equals(2, emp1.cantidadDeClientes())
+	emp1.darServicio(sarmiento)
+	assert.equals(3, emp1.cantidadDeClientes())
+	emp1.darServicio(alberdi)
+	assert.equals(3, emp1.cantidadDeClientes())
+	
+}
